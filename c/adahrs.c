@@ -6,6 +6,8 @@
 #include "conversions.h"
 #include "trig.h"
 #include "gpspos.h"
+#include "wind.h"
+#include "airdata.h"
 
 int main(void) {
 	double pos1[2], pos2[2], dms1[3], dms2[3], result, ppos[2];

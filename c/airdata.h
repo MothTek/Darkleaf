@@ -26,25 +26,8 @@ double machno(double speed, double sound){
 	return machno;
 }
 
-// Drift Angle = TRK - HDG (positive drift angle: right of track)
-
-double getdrift(double hdg, double trk){
-	double drift = hdg - trk;
-	return drift;
-}
-
-double windspeed(double gspeed, double aspeed, double drift){
-	double wind = sqrt(pow(gspeed,2) + pow(aspeed,2) - (2 * b * c * cos(drift));
-	return wind;
-}
-
-double winddir(double gspeed, double aspeed, double drift{
-	//TODO: maths for wind bearing. Something about law of COS
-	return 0;
-}
-
 // IAS = -/((2 * Dynamic pressure)/ ISA Air density)
-double ias(double spress, double tPress){
+double ias(double sPress, double tPress){
 	double indicated = sqrt((2* tPress - sPress)/ RHO);
 	return indicated;
 }
