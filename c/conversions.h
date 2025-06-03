@@ -9,6 +9,7 @@
 #define MI_FAC 1609.3445 // metres = mi/MI_FAC
 #define IN_FAC 39.37009424 // metres = in/IN_FAC
 #define NM_FAC 1852 // metres = NM/NM_FAC
+#define KELVIN 273.15 // 0 degrees C = 273.15K
 
 #ifndef M_PI
 #include <math.h>
@@ -50,7 +51,7 @@ double convertdistance (int in, int out, double dist) {
 	//in/out units: 11 m, 12 km, 13 cm, 21 ft, 22 mi, 23 in, 31 ft, 32 nm
 	//convert everything to metres if not, then convert out
 	double intermediate;
-	
+
 	if (in != 11) {
 		if (in == 12) {
 			intermediate = dist/1000;
@@ -70,7 +71,7 @@ double convertdistance (int in, int out, double dist) {
 	} else if (in == 11) {
 		intermediate = dist;
 	}
-	
+
 	if (out == 11) {
 		return intermediate;
 	} else if (out == 12) {
@@ -87,5 +88,13 @@ double convertdistance (int in, int out, double dist) {
 		return intermediate / FT_FAC;
 	} else if (out == 32) {
 		return intermediate / NM_FAC;
-	} 
+	}
+}
+
+double toCelcius(double tempK){
+	return tempK - KELVIN;
+}
+
+double toKelvin(double tempC){
+	return tempC + KELVIN;
 }
