@@ -72,3 +72,12 @@ double tas(double eas, double density){
 	double tas = eas * sqrt(density/RHO);
 	return tas;
 }
+
+/*
+	Altitude calculations
+*/
+
+double ialtitude(double qnh, double spress){
+//TODO Barometric formula ~1hpa/30ft proper math though
+	return 0;
+}
