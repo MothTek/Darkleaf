@@ -98,3 +98,25 @@ double toCelcius(double tempK){
 double toKelvin(double tempC){
 	return tempC + KELVIN;
 }
+
+// parse cli argument array [lat,lon] to double {lat,lon}
+void parse_position(const char *arg, double position[2]) {
+	char *copy = strdup(arg);
+
+	// Remove square brackets if present
+	if (copy[0] == '[') {
+		memmove(copy, copy + 1, strlen(copy));
+	}
+	size_t len = strlen(copy);
+	if (copy[len - 1] == ']') {
+		copy[len - 1] = '\0';
+	}
+
+	// Split by comma
+	char *token = strtok(copy, ",");
+	for (int i = 0; i < 2 && token != NULL; i++) {
+		position[i] = atof(token);
+		token = strtok(NULL, ",");
+	}
+
+}
