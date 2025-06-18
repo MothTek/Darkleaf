@@ -20,11 +20,11 @@ static int tocalc_flag;
 int main(int argc, char **argv) {
 	int c;
 	
-	double spress, tpress, tempC, tempK, relH, hdg, gspeed, gtrack;
+	double spress, tpress, tempC, tempK, relH, hdg, gspeed, gtrack, qnh;
 	double ppos[2], opos[2], dpos[2], lpos[2];
 	
 	//	variable has been set?
-	double spress_set = 0, tpress_set = 0, tempC_set = 0, tempK_set = 0, relH_set = 0, hdg_set = 0, gspeed_set = 0, gtrack_set = 0;
+	double spress_set = 0, tpress_set = 0, tempC_set = 0, tempK_set = 0, relH_set = 0, hdg_set = 0, gspeed_set = 0, gtrack_set = 0, qnh_set = 0;
 	double ppos_set = 0, opos_set = 0, dpos_set = 0, lpos_set = 0;
 	
 	while (1) {
@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 			// What to calculate
 			{"ias", no_argument, &tocalc_flag, 1},		//	Calculate indicated airspeed
 			{"tas", no_argument, &tocalc_flag, 2},		//	Calculate true airspeed
-			{"ialt", no_argument, &tocalc_flag,3},		//	Calculate indicated altitude
+			{"ialt", no_argument, &tocalc_flag, 3},		//	Calculate indicated altitude
 			{"bearing", no_argument, &tocalc_flag, 4},	//	Calculate bearing from point to another (gnss)
 			{"distance", no_argument, &tocalc_flag, 5},	//	Calculate distance between points (gnss)
 			{"xte", no_argument, &tocalc_flag, 6},		//	Calculate cross track error (gnss)
@@ -41,6 +41,7 @@ int main(int argc, char **argv) {
 			//	Sensor inputs for calculations
 			{"spress", required_argument, 0, 's'},	//	Static pressure (kPa)
 			{"tpress", required_argument, 0, 't'},	//	Total pressure reading (kPa) [Static + Dynamic]
+			{"qnh", required_argument, 0, 'q'},	// QNH (kPA)
 			{"tempC", required_argument, 0, 'c'},		//	Temperature in degrees Celcius
 			{"tempK", required_argument, 0, 'k'}, 	//	Temperature in Kelvin
 			{"relH", required_argument, 0, 'h'},	//	Relative humidity % as value 0.0 -> 1.0
@@ -65,60 +66,74 @@ int main(int argc, char **argv) {
 			// case 0:
 				// if(long_options[option_index].flag != 0)
 					// break;
-			case 's':
+			case 's': {
 				spress = atof(optarg); // kPa
 				spress_set = 1;
 				break;
-			case 't':
+			}
+			case 't': {
 				tpress = atof(optarg); // kPa
 				tpress_set = 1;
 				break;
-			case 'c':
+			}
+			case 'c': {
 				tempC = atof(optarg);
 				tempC_set = 1;
 				break;
-			case 'k':
+			}
+			case 'k': {
 				tempK = atof(optarg);
 				tempK_set = 1;
 				break;
-			case 'h':
+			}
+			case 'h': {
 				relH = atof(optarg);
 				relH_set = 1;
+				break;
+			}
 				
 //	usage --ppos lat,lon or \[lat,lon] or "[lat,lon]"				
-			case 'p':
+			case 'p': {
 				parse_position(optarg, ppos);
 				ppos_set = 1;
 				break;
-			case 'o':
+			}
+			case 'o': {
 				parse_position(optarg, opos);
 				opos_set = 1;
 				break;
-			case 'd':
+			}
+			case 'd': {
 				parse_position(optarg, dpos);
 				dpos_set = 1;
 				break;
-			case 'l':
+			}
+			case 'l': {
 				parse_position(optarg, lpos);
 				lpos_set = 1;
 				break;
-			case 'H':
+			}
+			case 'H': {
 				hdg = atof(optarg);
 				hdg_set = 1;
 				break;
-			case 'S':
+			}
+			case 'S': {
 				gspeed = atof(optarg);
 				gspeed_set = 1;
 				break;
-			case 'T':
+			}
+			case 'T': {
 				gtrack = atof(optarg);
 				gtrack_set = 1;
 				break;
-			case '?':
+			}
+			case '?': {
 				//error
 				break;
 			//default:
 				//abort();
+			}
 		}
 	}
 	
@@ -153,6 +168,18 @@ int main(int argc, char **argv) {
 				printf("no relH\n");
 			} else {
 				printf("%f\n", tas(eas(spress,tpress),density(spress, tempK, relH)));
+				exit(NO_ERROR);
+			}
+		}
+		case 3: {
+			if (!spress_set) {
+				printf("no spress\n");
+				exit(INSUFF_ARGS);
+			} else if (!qnh_set) {
+				printf("no qnh\n");
+				exit(INSUFF_ARGS);
+			} else {
+				printf("%f\n", ialt(qnh, spress));
 				exit(NO_ERROR);
 			}
 		}

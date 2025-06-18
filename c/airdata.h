@@ -17,6 +17,8 @@
 #define ISA_STATIC 101.325 // kPa
 #define GASCONST_DRY 287.058 // J.kg^-1.K^-1
 #define GASCONST_WV 461.495 // J.kg^-1.K^-1
+#define ALTCONST 44307.69396	//	From NOAA Pressure Altitude formula
+#define ALTEXP 0.190284	// From NOAA Pressure Altitude formula
 
 // Speed of Sound c = sqrt(ratio of specific heats * gas constant * absolute temperature)
 
@@ -119,7 +121,10 @@ double tas(double eas, double dens){
 	Altitude calculations
 */
 
-double ialtitude(double qnh, double spress){
-//TODO Barometric formula ~1hpa/30ft proper math though
-	return 0;
+double ialt(double qnh, double spress){
+//	From NOAA Pressure Altitude calculations
+//	Returns meters
+	double alt;
+	alt = (1 - pow((spress/qnh), ALTEXP)) * ALTCONST;
+	return alt;
 }
